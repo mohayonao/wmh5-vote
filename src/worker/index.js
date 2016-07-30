@@ -32,13 +32,23 @@ function audioloop() {
     const bufferLength = buffer.length >> 1;
     const imax = bufferLength / blockSize;
 
+    let error = 0;
+
     for (let i = 0; i < imax; i++) {
       context.process();
       buffer.set(context.outputs[0], blockSize * i);
       buffer.set(context.outputs[1], blockSize * i + bufferLength);
+
+      if (4 <= (context.outputs[0][0] + context.outputs[1][0])) {
+        error = 1;
+        break;
+      }
     }
 
-    if (10 <= (context.outputs[0][0] + context.outputs[1][0])) {
+    if (error) {
+      for (let i = 0; i < bufferLength; i++) {
+        buffer[i] = 0;
+      }
       makeSynth(state.synthDefList, state.ctrl);
     }
 
