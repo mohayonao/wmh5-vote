@@ -60,8 +60,8 @@ class View {
 
   animate() {
     const state = this.state;
-    const rRate = clamp(state.r + rand2(state.rms * 0.2), 0.1, 1);
-    const bRate = clamp(state.b + rand2(state.rms * 0.2), 0.1, 1);
+    const rRate = clamp(state.r + rand2(state.rms * 0.15), 0.1, 1);
+    const bRate = clamp(state.b + rand2(state.rms * 0.15), 0.1, 1);
 
     if (rRate !== state.rRate) {
       setAttribute(this.$r, { fill: toRGB(R.map(x => x * rRate)) });
