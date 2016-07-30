@@ -21,5 +21,8 @@
     "watch": "npm-run-all -p watch:*",
     "watch:main": "watchify src/main -o public/main.js -v -t babelify",
     "watch:worker": "watchify src/worker -o public/worker.js -v -t babelify"
+  },
+  "dependencies": {
+    "firebase": "^3.2.1"
   }
 }
