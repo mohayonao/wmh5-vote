@@ -118,11 +118,17 @@ class MIDI {
   }
 
   padOn(index) {
-    this.updateCtrl(index, PAD, 1);
+    if (this.state.hold) {
+      this.updateCtrl(index, PAD, 1 - this.ctrl[index][PAD] ? 1 : 0);
+    } else {
+      this.updateCtrl(index, PAD, 1);
+    }
   }
 
   padOff(index) {
-    this.updateCtrl(index, PAD, 0);
+    if (!this.state.hold) {
+      this.updateCtrl(index, PAD, 0);
+    }
   }
 
   updateLED() {
