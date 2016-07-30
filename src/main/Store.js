@@ -11,6 +11,10 @@ class Store extends events.EventEmitter {
 
     this.dispatcher = dispatcher;
     this.db = firebase.database();
+
+    this.dispatcher.on("vote", (data) => {
+      console.log("vote", data);
+    });
   }
 }
 
