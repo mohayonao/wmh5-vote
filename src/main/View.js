@@ -1,5 +1,6 @@
 "use strict";
 
+const synthdef = require("./synthdef");
 const events = "ontouchstart" in window ? [ "touchstart" ] : [ "mousedown" ];
 const R = [ 0xff, 0x52, 0x52 ];
 const B = [ 0x03, 0xa9, 0xf4 ];
@@ -8,10 +9,12 @@ class View {
   constructor(dispatcher, elem) {
     this.dispatcher = dispatcher;
     this.elem = elem;
+    this.state = { mode: -1, r: 0, b: 0, rRate: 0, bRate: 0 };
 
     this.$r = this._createRect(elem, 0);
     this.$b = this._createRect(elem, 1);
-    this.state = { mode: 0, r: 0, b: 0, rRate: 0, bRate: 0 };
+
+    this._setupDragAndDrop();
 
     this.changeMode(0);
     this.animate();
@@ -83,6 +86,30 @@ class View {
     elem.appendChild(rect);
 
     return rect;
+  }
+
+  _setupDragAndDrop() {
+    const dropFile = (file) => {
+      if (!/\.scsyndef/.test(file.name)) {
+        return;
+      }
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const data = synthdef.decode(e.target.result);
+
+        this.dispatcher.emit("synthDefList", data);
+      };
+      reader.readAsArrayBuffer(file);
+    };
+
+    window.addEventListener("dragover", (e) => {
+      e.preventDefault();
+    });
+    window.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropFile(e.dataTransfer.files[0]);
+    });
   }
 }
 

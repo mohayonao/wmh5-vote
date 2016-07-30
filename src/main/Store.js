@@ -28,9 +28,17 @@ class Store extends events.EventEmitter {
     this.db.ref("ctrl").on("value", (e) => {
       if (flag.ctrl) {
         this.emit("ctrl", e.val());
-        flag.ctrl = true;
       } else {
         this.emit("ctrl:init", e.val());
+        flag.ctrl = true;
+      }
+    });
+    this.db.ref("synthDefList").on("value", (e) => {
+      if (flag.synthDefList) {
+        this.emit("synthDefList", JSON.parse(e.val()));
+      } else {
+        this.emit("synthDefList:init", JSON.parse(e.val()));
+        flag.synthDefList = true;
       }
     });
   }
@@ -45,6 +53,10 @@ class Store extends events.EventEmitter {
     this.dispatcher.on("ctrl", (data) => {
       this.db.ref("ctrl").set(data);
     });
+    this.dispatcher.on("synthDefList", (data) => {
+      this.db.ref("synthDefList").set(JSON.stringify(data));
+    });
+
   }
 }
 
