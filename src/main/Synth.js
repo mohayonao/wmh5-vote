@@ -36,6 +36,12 @@ class Synth {
     this.store.on("ctrl", (data) => {
       this.worker.postMessage({ type: "ctrl", data });
     });
+    this.store.on("synthDefList:init", (data) => {
+      this.worker.postMessage({ type: "synthDefList:init", data });
+    });
+    this.store.on("synthDefList", (data) => {
+      this.worker.postMessage({ type: "synthDefList", data });
+    });
   }
 
   onmessage(e) {
