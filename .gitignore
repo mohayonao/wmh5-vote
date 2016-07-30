@@ -1,0 +1,5 @@
+.DS_STORE
+npm-debug.log
+firebase-debug.log
+node_modules/
+public/*.js

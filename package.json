@@ -1,0 +1,25 @@
+{
+  "name": "wmh5-vote",
+  "version": "0.0.0",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.9.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.0",
+    "eslint": "^3.2.0",
+    "npm-run-all": "^2.3.0",
+    "watchify": "^3.7.0"
+  },
+  "private": true,
+  "scripts": {
+    "build": "npm-run-all -p build:*",
+    "build:main": "browserify src/main -o public/main.js -v -t babelify",
+    "build:worker": "browserify src/worker -o public/worker.js -v -t babelify",
+    "clean": "rm -rf public/*.js",
+    "deploy": "npm-run-all lint build firebase:deploy",
+    "firebase:deploy": "firebase deploy",
+    "lint": "eslint src",
+    "watch": "npm-run-all -p watch:*",
+    "watch:main": "watchify src/main -o public/main.js -v -t babelify",
+    "watch:worker": "watchify src/worker -o public/worker.js -v -t babelify"
+  }
+}
