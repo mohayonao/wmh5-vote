@@ -9,7 +9,7 @@ class View {
   constructor(dispatcher, elem) {
     this.dispatcher = dispatcher;
     this.elem = elem;
-    this.state = { mode: -1, r: 0, b: 0, rRate: 0, bRate: 0 };
+    this.state = { mode: -1, r: 0, b: 0, rRate: 0, bRate: 0, rms: 0 };
 
     this.$r = this._createRect(elem, 0);
     this.$b = this._createRect(elem, 1);
@@ -28,6 +28,9 @@ class View {
     this.store.on("mode", (data) => {
       this.changeMode(data);
     });
+    this.store.on("rms", (data) => {
+      this.changeRMS(data);
+    });
   }
 
   changeMode(mode) {
@@ -42,6 +45,9 @@ class View {
       this.state.mode = mode;
     }
   }
+  changeRMS(rms) {
+    this.state.rms = rms;
+  }
 
   vote(value) {
     if (value === 0) {
@@ -54,8 +60,8 @@ class View {
 
   animate() {
     const state = this.state;
-    const rRate = clamp(state.r, 0.1, 1);
-    const bRate = clamp(state.b, 0.1, 1);
+    const rRate = clamp(state.r + rand2(state.rms * 0.2), 0.1, 1);
+    const bRate = clamp(state.b + rand2(state.rms * 0.2), 0.1, 1);
 
     if (rRate !== state.rRate) {
       setAttribute(this.$r, { fill: toRGB(R.map(x => x * rRate)) });
@@ -115,6 +121,10 @@ class View {
 
 function clamp(value, minValue, maxValue) {
   return Math.max(minValue, Math.min(value, maxValue));
+}
+
+function rand2(value) {
+  return (Math.random() * 2 - 1) * value;
 }
 
 function toRGB(rgb) {

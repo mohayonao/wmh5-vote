@@ -9,7 +9,7 @@ class Synth {
   constructor(dispatcher, audioContext) {
     this.dispatcher = dispatcher;
     this.audioContext = audioContext;
-    this.worker = new Worker("worker.js");
+    this.worker = new Worker("worker.js?" + Date.now());
 
     this.worker.onmessage = (e) => {
       this.onmessage(e);
