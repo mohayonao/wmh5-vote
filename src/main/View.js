@@ -25,6 +25,9 @@ class View {
     this.store.on("mode", (data) => {
       this.changeMode(data);
     });
+    this.store.on("ctrl", (data) => {
+      document.getElementById("message").textContent = JSON.stringify(data);
+    });
   }
 
   changeMode(mode) {
