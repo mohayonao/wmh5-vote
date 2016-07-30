@@ -2,8 +2,8 @@
 
 const nmap = require("nmap");
 
-const BUFFER_SLOTS = 8;
-const BUFFER_LENGTH = 512;
+const BUFFER_SLOTS = 4;
+const BUFFER_LENGTH = 1024;
 
 class Synth {
   constructor(dispatcher, audioContext) {
@@ -60,12 +60,23 @@ class Synth {
 
     e.outputBuffer.getChannelData(0).set(buffer.subarray(0, BUFFER_LENGTH));
     e.outputBuffer.getChannelData(1).set(buffer.subarray(BUFFER_LENGTH));
+    this.dispatcher.emit("rms", rms(buffer));
 
     this.worker.postMessage(buffer, [ buffer.buffer ]);
 
     this.slots[this.rIndex] = null;
     this.rIndex = (this.rIndex + 1) % BUFFER_SLOTS;
   }
+}
+
+function rms(signal) {
+  let x = 0;
+
+  for (let i = 0, imax = signal.length; i < imax; i++) {
+    x += signal[i] * signal[i];
+  }
+
+  return Math.sqrt(x / signal.length);
 }
 
 module.exports = Synth;

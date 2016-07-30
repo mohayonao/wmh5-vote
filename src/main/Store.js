@@ -56,7 +56,9 @@ class Store extends events.EventEmitter {
     this.dispatcher.on("synthDefList", (data) => {
       this.db.ref("synthDefList").set(JSON.stringify(data));
     });
-
+    this.dispatcher.on("rms", (data) => {
+      this.emit("rms", data);
+    });
   }
 }
 

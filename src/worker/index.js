@@ -25,15 +25,6 @@ global.onmessage = (e) => {
   }
 }
 
-function init() {
-  if (state.opts && state.ctrl && state.synthDefList) {
-    context = new scsynth.SCContext({ sampleRate: state.opts.sampleRate });
-    slots = nmap(state.opts.BUFFER_SLOTS, () => new Float32Array(state.opts.BUFFER_LENGTH * 2));
-    makeSynth(state.synthDefList, state.ctrl);
-    audioloop();
-  }
-}
-
 function audioloop() {
   if (slots[rIndex]) {
     const buffer = slots[rIndex];
@@ -72,6 +63,17 @@ function makeSynth(synthDefList, ctrl) {
   });
 
   global.console.log(`u: ${ numOfUnits }, avg: ${ numOfUnits / 8 }`);
+}
+
+function init() {
+  if (!(state.opts && state.synthDefList && state.ctrl)) {
+    return;
+  }
+  context = new scsynth.SCContext({ sampleRate: state.opts.sampleRate });
+  slots = nmap(state.opts.BUFFER_SLOTS, () => new Float32Array(state.opts.BUFFER_LENGTH * 2));
+
+  makeSynth(state.synthDefList, state.ctrl);
+  audioloop();
 }
 
 recvMessage["init"] = (data) => {
