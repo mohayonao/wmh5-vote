@@ -5,7 +5,9 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const Dispatcher = require("./dispatcher");
 const Store = require("./Store");
 const View = require("./View");
+const MIDI = require("./MIDI");
 const config = require("../config");
+const requestMIDIAccess = require("request-midi-access");
 const tapToWebAudioAPI = require("./tapToWebAudioAPI");
 
 function main() {
@@ -25,6 +27,12 @@ function main() {
     const view = new View(dispatcher, document.getElementById("canvas"));
 
     view.listen(store);
+
+    requestMIDIAccess().then((access) => {
+      const midi = new MIDI(dispatcher, access);
+
+      midi.listen(store);
+    });
 
     window.audioContext = audioContext;
   });

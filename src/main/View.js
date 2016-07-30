@@ -11,11 +11,9 @@ class View {
 
     this.$r = this._createRect(elem, 0);
     this.$b = this._createRect(elem, 1);
-    this.state = { r: 0, b: 0, rRate: 0, bRate: 0 };
+    this.state = { mode: 0, r: 0, b: 0, rRate: 0, bRate: 0 };
 
-    setAttribute(this.$r, { x: " 0%", y: " 0%", width: "100%", height: " 50%" });
-    setAttribute(this.$b, { x: " 0%", y: "50%", width: "100%", height: " 50%" });
-
+    this.changeMode(0);
     this.animate();
   }
 
@@ -24,6 +22,22 @@ class View {
     this.store.on("vote", (data) => {
       this.vote(data);
     });
+    this.store.on("mode", (data) => {
+      this.changeMode(data);
+    });
+  }
+
+  changeMode(mode) {
+    if (mode !== this.state.mode) {
+      if (mode) {
+        setAttribute(this.$r, { x: " 0%", y: " 0%", width: " 50%", height: "100%" });
+        setAttribute(this.$b, { x: "50%", y: " 0%", width: " 50%", height: "100%" });
+      } else {
+        setAttribute(this.$r, { x: " 0%", y: " 0%", width: "100%", height: " 50%" });
+        setAttribute(this.$b, { x: " 0%", y: "50%", width: "100%", height: " 50%" });
+      }
+      this.state.mode = mode;
+    }
   }
 
   vote(value) {
