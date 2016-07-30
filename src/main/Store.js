@@ -26,7 +26,12 @@ class Store extends events.EventEmitter {
       flag.vote = true;
     });
     this.db.ref("ctrl").on("value", (e) => {
-      this.emit("ctrl", e.val());
+      if (flag.ctrl) {
+        this.emit("ctrl", e.val());
+        flag.ctrl = true;
+      } else {
+        this.emit("ctrl:init", e.val());
+      }
     });
   }
 
