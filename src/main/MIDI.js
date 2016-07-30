@@ -1,5 +1,6 @@
 "use strict";
 
+const throttle = require("lodash.throttle");
 const WebMIDIEmitter = require("web-midi-emitter");
 const DEVICE_MATCHER = "Launch Control";
 const KNOB1_MAP  = [ 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c ];
@@ -20,6 +21,8 @@ class MIDI {
     this.device = null;
     this.ctrl = null;
     this.state = { hold: 0, cursor: [ 0, 0, 0, 0 ], led: [], ledColor: [] };
+
+    this._emitCtrl = throttle(() => { this.emitCtrl(true); }, 100);
 
     this.device = new WebMIDIEmitter(access, DEVICE_MATCHER);
     this.device.on("statechange", (e) => {
@@ -78,6 +81,14 @@ class MIDI {
     }
   }
 
+  emitCtrl(immediate) {
+    if (immediate) {
+      this.dispatcher.emit("ctrl", this.ctrl);
+    } else {
+      this._emitCtrl();
+    }
+  }
+
   updateCursor(cursor, value) {
     const state = this.state;
 
@@ -106,13 +117,13 @@ class MIDI {
     this.ctrl.forEach((ctrl) => {
       ctrl.fill(0);
     });
-    this.dispatcher.emit("ctrl", this.ctrl);
+    this.emitCtrl();
   }
 
   updateCtrl(index, ctrlType, value) {
     if (this.ctrl[index][ctrlType] !== value) {
       this.ctrl[index][ctrlType] = value;
-      this.dispatcher.emit("ctrl", this.ctrl);
+      this.emitCtrl(ctrlType === PAD);
       this.updateLED();
     }
   }

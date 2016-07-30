@@ -21,7 +21,7 @@ function main() {
   $message.textContent = "TAP TO HACK";
 
   tapToWebAudioAPI((audioContext) => {
-    // document.body.removeChild($message);
+    document.body.removeChild($message);
 
     const dispatcher = new Dispatcher();
     const store = new Store(dispatcher, config);
