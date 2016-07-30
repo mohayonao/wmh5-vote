@@ -38,6 +38,10 @@ function audioloop() {
       buffer.set(context.outputs[1], blockSize * i + bufferLength);
     }
 
+    if (10 <= (context.outputs[0][0] + context.outputs[1][0])) {
+      makeSynth(state.synthDefList, state.ctrl);
+    }
+
     global.postMessage(buffer, [ buffer.buffer ]);
 
     slots[rIndex] = null;
