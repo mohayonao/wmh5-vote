@@ -26,6 +26,9 @@ class MIDI {
 
   listen(store) {
     this.store = store;
+    this.store.on("ctrl", (data) => {
+      document.getElementById("message").textContent = JSON.stringify(data);
+    });
   }
 
   onstatechange(e) {
