@@ -6,7 +6,7 @@
     "lodash.throttle": "^4.1.0",
     "nmap": "^0.9.0",
     "request-midi-access": "^1.0.0",
-    "scsynth": "0.0.19",
+    "scsynth": "0.0.21",
     "synthdef-decoder": "^0.4.0",
     "synthdef-json-validator": "^0.1.0",
     "web-midi-emitter": "^0.4.0"
